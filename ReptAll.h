@@ -90,27 +90,27 @@ typedef short int			int16;
 // Parameter indices
 enum {
 	REPTALL_INPUT = 0,
-	REPTALL_COUNT,           // Number of copies
-	REPTALL_TRANSLATE_X,     // X translation per copy
-	REPTALL_TRANSLATE_Y,     // Y translation per copy
-	REPTALL_TRANSLATE_Z,     // Z translation per copy
-	REPTALL_ROTATE_X,        // X rotation per copy
-	REPTALL_ROTATE_Y,        // Y rotation per copy
-	REPTALL_ROTATE_Z,        // Z rotation per copy
-	REPTALL_SCALE,           // Scale change per copy (%)
+	REPTALL_COPIES_X,        // Number of copies in X
+	REPTALL_STEP_X,          // X step per copy
+	REPTALL_STEP_Y,          // Y step per copy
+	REPTALL_STEP_Z,          // Z step per copy
+	REPTALL_STEP_ROTATE_X,   // X rotation step per copy
+	REPTALL_STEP_ROTATE_Y,   // Y rotation step per copy
+	REPTALL_STEP_ROTATE_Z,   // Z rotation step per copy
+	REPTALL_STEP_SCALE,      // Scale step per copy (%)
 	REPTALL_NUM_PARAMS
 };
 
 // Disk IDs for parameter persistence
 enum {
-	COUNT_DISK_ID = 1,
-	TRANSLATE_X_DISK_ID,
-	TRANSLATE_Y_DISK_ID,
-	TRANSLATE_Z_DISK_ID,
-	ROTATE_X_DISK_ID,
-	ROTATE_Y_DISK_ID,
-	ROTATE_Z_DISK_ID,
-	SCALE_DISK_ID,
+	COPIES_X_DISK_ID = 1,
+	STEP_X_DISK_ID,
+	STEP_Y_DISK_ID,
+	STEP_Z_DISK_ID,
+	STEP_ROTATE_X_DISK_ID,
+	STEP_ROTATE_Y_DISK_ID,
+	STEP_ROTATE_Z_DISK_ID,
+	STEP_SCALE_DISK_ID,
 };
 
 // 3D Transform info structure for render

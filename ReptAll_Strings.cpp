@@ -30,17 +30,15 @@ typedef struct {
 TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_NONE,						"",
 	StrID_Name,						"3D Repeater",
-	StrID_Description,				"3D camera-aware layer repeater effect.\rCopyright 2024",
-	StrID_Count_Param_Name,			"Count",
-	StrID_TranslateX_Param_Name,	"Translate X",
-	StrID_TranslateY_Param_Name,	"Translate Y",
-	StrID_TranslateZ_Param_Name,	"Translate Z",
-	StrID_RotateX_Param_Name,		"Rotate X",
-	StrID_RotateY_Param_Name,		"Rotate Y",
-	StrID_RotateZ_Param_Name,		"Rotate Z",
-	StrID_Scale_Param_Name,			"Scale",
-	StrID_Use3D_Param_Name,			"Use 3D Camera",
-	StrID_Use3D_Description,		"Link transforms to comp camera",
+	StrID_Description,				"3D camera-aware layer repeater effect.\\rCopyright 2024",
+	StrID_CopiesX_Param_Name,		"Copies X",
+	StrID_StepX_Param_Name,			"Step X",
+	StrID_StepY_Param_Name,			"Step Y",
+	StrID_StepZ_Param_Name,			"Step Z",
+	StrID_StepRotateX_Param_Name,	"Step Rotate X",
+	StrID_StepRotateY_Param_Name,	"Step Rotate Y",
+	StrID_StepRotateZ_Param_Name,	"Step Rotate Z",
+	StrID_StepScale_Param_Name,		"Step Scale",
 };
 
 

@@ -53,7 +53,7 @@ resource 'PiPL' (16000) {
 
 		},
 		AE_Effect_Global_OutFlags_2 {
-	6  /* PF_OutFlag2_I_USE_3D_CAMERA (0x2) | PF_OutFlag2_I_USE_3D_LIGHTS (0x4) */
+		6  /* PF_OutFlag2_I_USE_3D_CAMERA (0x2) | PF_OutFlag2_I_USE_3D_LIGHTS (0x4) */
 	},
 		/* [11] */
 		AE_Effect_Match_Name {

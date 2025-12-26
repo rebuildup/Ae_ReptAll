@@ -94,19 +94,19 @@ ParamsSetup (
 	PF_Err		err		= PF_Err_NONE;
 	PF_ParamDef	def;	
 
-	// Count - number of copies
+	// Copies X - number of copies in X direction
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_SLIDER(	STR(StrID_Count_Param_Name), 
+	PF_ADD_SLIDER(	STR(StrID_CopiesX_Param_Name), 
 					REPTALL_COUNT_MIN, 
 					REPTALL_COUNT_MAX, 
 					REPTALL_COUNT_MIN, 
-					REPTALL_COUNT_MAX,
+					REPTALL_COUNT_MAX, 
 					REPTALL_COUNT_DFLT,
-					COUNT_DISK_ID);
+					COPIES_X_DISK_ID);
 
-	// Translate X
+	// Step X
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_TranslateX_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepX_Param_Name), 
 							REPTALL_TRANSLATE_MIN, 
 							REPTALL_TRANSLATE_MAX, 
 							REPTALL_TRANSLATE_MIN, 
@@ -115,11 +115,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							TRANSLATE_X_DISK_ID);
+							STEP_X_DISK_ID);
 
-	// Translate Y
+	// Step Y
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_TranslateY_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepY_Param_Name), 
 							REPTALL_TRANSLATE_MIN, 
 							REPTALL_TRANSLATE_MAX, 
 							REPTALL_TRANSLATE_MIN, 
@@ -128,11 +128,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							TRANSLATE_Y_DISK_ID);
+							STEP_Y_DISK_ID);
 
-	// Translate Z
+	// Step Z
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_TranslateZ_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepZ_Param_Name), 
 							REPTALL_TRANSLATE_MIN, 
 							REPTALL_TRANSLATE_MAX, 
 							REPTALL_TRANSLATE_MIN, 
@@ -141,11 +141,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							TRANSLATE_Z_DISK_ID);
+							STEP_Z_DISK_ID);
 
-	// Rotate X
+	// Step Rotate X
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_RotateX_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepRotateX_Param_Name), 
 							REPTALL_ROTATE_MIN, 
 							REPTALL_ROTATE_MAX, 
 							REPTALL_ROTATE_MIN, 
@@ -154,11 +154,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							ROTATE_X_DISK_ID);
+							STEP_ROTATE_X_DISK_ID);
 
-	// Rotate Y
+	// Step Rotate Y
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_RotateY_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepRotateY_Param_Name), 
 							REPTALL_ROTATE_MIN, 
 							REPTALL_ROTATE_MAX, 
 							REPTALL_ROTATE_MIN, 
@@ -167,11 +167,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							ROTATE_Y_DISK_ID);
+							STEP_ROTATE_Y_DISK_ID);
 
-	// Rotate Z
+	// Step Rotate Z
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_RotateZ_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepRotateZ_Param_Name), 
 							REPTALL_ROTATE_MIN, 
 							REPTALL_ROTATE_MAX, 
 							REPTALL_ROTATE_MIN, 
@@ -180,11 +180,11 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							0,
-							ROTATE_Z_DISK_ID);
+							STEP_ROTATE_Z_DISK_ID);
 
-	// Scale
+	// Step Scale
 	AEFX_CLR_STRUCT(def);
-	PF_ADD_FLOAT_SLIDERX(	STR(StrID_Scale_Param_Name), 
+	PF_ADD_FLOAT_SLIDERX(	STR(StrID_StepScale_Param_Name), 
 							REPTALL_SCALE_MIN, 
 							REPTALL_SCALE_MAX, 
 							REPTALL_SCALE_MIN, 
@@ -193,9 +193,9 @@ ParamsSetup (
 							PF_Precision_TENTHS,
 							0,
 							PF_ValueDisplayFlag_PERCENT,
-							SCALE_DISK_ID);
+							STEP_SCALE_DISK_ID);
 
-	out_data->num_params = REPTALL_SCALE + 1;  // No Use 3D checkbox - always enabled
+	out_data->num_params = REPTALL_NUM_PARAMS;
 	
 	return err;
 }
@@ -380,14 +380,14 @@ Render (
 	ReptAllInfo info;
 	AEFX_CLR_STRUCT(info);
 	
-	info.count       = params[REPTALL_COUNT]->u.sd.value;
-	info.translate_x = params[REPTALL_TRANSLATE_X]->u.fs_d.value;
-	info.translate_y = params[REPTALL_TRANSLATE_Y]->u.fs_d.value;
-	info.translate_z = params[REPTALL_TRANSLATE_Z]->u.fs_d.value;
-	info.rotate_x    = params[REPTALL_ROTATE_X]->u.fs_d.value;
-	info.rotate_y    = params[REPTALL_ROTATE_Y]->u.fs_d.value;
-	info.rotate_z    = params[REPTALL_ROTATE_Z]->u.fs_d.value;
-	info.scale       = params[REPTALL_SCALE]->u.fs_d.value;
+	info.count       = params[REPTALL_COPIES_X]->u.sd.value;
+	info.translate_x = params[REPTALL_STEP_X]->u.fs_d.value;
+	info.translate_y = params[REPTALL_STEP_Y]->u.fs_d.value;
+	info.translate_z = params[REPTALL_STEP_Z]->u.fs_d.value;
+	info.rotate_x    = params[REPTALL_STEP_ROTATE_X]->u.fs_d.value;
+	info.rotate_y    = params[REPTALL_STEP_ROTATE_Y]->u.fs_d.value;
+	info.rotate_z    = params[REPTALL_STEP_ROTATE_Z]->u.fs_d.value;
+	info.scale       = params[REPTALL_STEP_SCALE]->u.fs_d.value;
 	
 	// Get source layer
 	PF_EffectWorld *srcP = &params[REPTALL_INPUT]->u.ld;
