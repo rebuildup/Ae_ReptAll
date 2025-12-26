@@ -1,0 +1,4 @@
+^D:\1_PROJECTS\AFTEREFFECTS\PLUGIN\SDK\TEMPLATE\REPTALL\REPTALLPIPL.R
+cl /I "d:\1_projects\AfterEffects\plugin\SDK\Template\ReptAll\Win\..\..\..\Headers" /EP ".."\\"ReptAllPiPL.r" > "x64\Release\"\\"ReptAllPiPL.rr"
+"d:\1_projects\AfterEffects\plugin\SDK\Template\ReptAll\Win\..\..\..\Resources\PiPLTool" "x64\Release\ReptAllPiPL.rr" "x64\Release\ReptAllPiPL.rrc"
+cl /D "MSWindows" /EP x64\Release\ReptAllPiPL.rrc >               "d:\1_projects\AfterEffects\plugin\SDK\Template\ReptAll\Win\"\\"ReptAllPiPL".rc
