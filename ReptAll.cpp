@@ -572,12 +572,12 @@ PF_Err PluginDataEntryFunction2(
 	result = PF_REGISTER_EFFECT_EXT2(
 		inPtr,
 		inPluginDataCallBackPtr,
-		"3D Repeater", // Name
-		"ADBE 3D Repeater", // Match Name
-		"Stylize", // Category
+		"ReptAll", // Name
+		"361do ReptAll", // Match Name
+		"361do_plugins", // Category
 		AE_RESERVED_INFO, // Reserved Info
 		"EffectMain",	// Entry point
-		"https://www.adobe.com");	// support URL
+		"https://github.com/rebuildup/Ae_ReptAll");	// support URL
 
 	return result;
 }
