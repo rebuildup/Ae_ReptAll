@@ -564,6 +564,10 @@ jobs:
           
           if [ -n "$PLUGIN_PATH" ]; then
             echo "Generating PiPL resource..."
+            
+            # Make build_pipl.sh executable
+            chmod +x "${{ github.workspace }}/Mac/build_pipl.sh"
+            
             "${{ github.workspace }}/Mac/build_pipl.sh" "$PLUGIN_DIR" "$PLUGIN_PATH" "$SDK_ROOT"
 
             echo "=== Verifying Plugin Bundle Structure ==="
