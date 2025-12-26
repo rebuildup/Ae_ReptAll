@@ -456,6 +456,20 @@ Render (
 			}
 		}
 	}
+	
+	// Extract camera position from matrix (Phase 4a)
+	PF_FpLong camera_x = 0.0;
+	PF_FpLong camera_y = 0.0;
+	PF_FpLong camera_z = 0.0;
+	
+	if (has_camera) {
+		// Camera position is in the last column of the 4x4 matrix
+		// mat[row][col], position is [0][3], [1][3], [2][3]
+		camera_x = camera_matrix.mat[0][3];
+		camera_y = camera_matrix.mat[1][3];
+		camera_z = camera_matrix.mat[2][3];
+	}
+	
 	// ===== End of 3D Camera Information =====
 	
 	// Clear output (will be filled by compositing)
@@ -467,8 +481,46 @@ Render (
 		ERR(suites.FillMatteSuite2()->fill(in_data->effect_ref, &clearColor, NULL, output));
 	}
 	
-	// Render copies from back to front (furthest first for proper Z-order)
-	for (A_long i = info.count - 1; i >= 0 && !err; i--) {
+	// ===== Phase 4b: Calculate Z-order sorting =====
+	// Structure to hold copy index and camera distance
+	struct CopyOrder {
+		A_long index;
+		PF_FpLong camera_distance;
+	};
+	
+	CopyOrder render_order[10];  // Max 10 copies (REPTALL_COUNT_MAX)
+	
+	// Calculate camera distance for each copy
+	for (A_long i = 0; i < info.count; i++) {
+		PF_FpLong totalTranslateX = info.translate_x * i;
+		PF_FpLong totalTranslateY = info.translate_y * i;
+		PF_FpLong totalTranslateZ = info.translate_z * i;
+		
+		// Calculate distance from camera
+		PF_FpLong dx = totalTranslateX - camera_x;
+		PF_FpLong dy = totalTranslateY - camera_y;
+		PF_FpLong dz = totalTranslateZ - camera_z;
+		
+		render_order[i].index = i;
+		render_order[i].camera_distance = sqrt(dx*dx + dy*dy + dz*dz);
+	}
+	
+	// Simple bubble sort (small array, not performance critical)
+	// Sort furthest first (descending distance)
+	for (A_long i = 0; i < info.count - 1; i++) {
+		for (A_long j = 0; j < info.count - i - 1; j++) {
+			if (render_order[j].camera_distance < render_order[j+1].camera_distance) {
+				CopyOrder temp = render_order[j];
+				render_order[j] = render_order[j+1];
+				render_order[j+1] = temp;
+			}
+		}
+	}
+	// ===== End: Z-order sorting =====
+	
+	// Render copies in sorted order (furthest first for proper Z-order)
+	for (A_long render_i = 0; render_i < info.count && !err; render_i++) {
+		A_long i = render_order[render_i].index;  // Get actual copy index
 		// Calculate cumulative transform for this copy
 		PF_FpLong totalTranslateX = info.translate_x * i;
 		PF_FpLong totalTranslateY = info.translate_y * i;
@@ -520,8 +572,18 @@ Render (
 				// Apply inverse transform (reverse order)
 				PF_FpLong invScale = 100.0 / totalScale;
 				PF_FpLong invRotateZ = -totalRotateZ;
+				
+				// Phase 4a: Apply camera position offset
+				// Camera offset affects the apparent position of copies
 				PF_FpLong invTranslateX = -totalTranslateX;
 				PF_FpLong invTranslateY = -totalTranslateY;
+				
+				if (has_camera) {
+					// Adjust translation based on camera position
+					// When camera moves right (+X), scene appears to move left
+					invTranslateX += camera_x;
+					invTranslateY += camera_y;
+				}
 				
 				ApplyTransform2D(
 					(PF_FpLong)x, (PF_FpLong)y,

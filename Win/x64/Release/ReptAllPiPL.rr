@@ -127,11 +127,11 @@ resource 'PiPL' (16000) {
 		},
 		
 		Name {
-			"3D Repeater"
+			"ReptAll"
 		},
 		
 		Category {
-			"Stylize"
+			"361do_plugins"
 		},
 
     
@@ -171,7 +171,7 @@ resource 'PiPL' (16000) {
 	},
 		
 		AE_Effect_Match_Name {
-			"ADBE 3D Repeater"
+			"361do ReptAll"
 		},
 		
 		AE_Reserved_Info {
@@ -179,7 +179,7 @@ resource 'PiPL' (16000) {
 		},
 		
 		AE_Effect_Support_URL {
-			"https://www.adobe.com"
+			"https://github.com/rebuildup/Ae_ReptAll"
 		}
 	}
 };
