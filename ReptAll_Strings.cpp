@@ -27,7 +27,7 @@ typedef struct {
 } TableString;
 
 
-TableString		g_strs[StrID_NUMTYPES] = {
+const TableString		g_strs[StrID_NUMTYPES] = {
 	StrID_NONE,						"",
 	StrID_Name,						"3D Repeater",
 	StrID_Description,				"3D camera-aware layer repeater effect.\\rCopyright 2024",
@@ -44,5 +44,9 @@ TableString		g_strs[StrID_NUMTYPES] = {
 
 char	*GetStringPtr(int strNum)
 {
-	return g_strs[strNum].str;
+	// Add boundary check to prevent out-of-bounds access
+	if (strNum < 0 || strNum >= StrID_NUMTYPES) {
+		return const_cast<char*>("");
+	}
+	return const_cast<char*>(g_strs[strNum].str);
 }

@@ -361,3 +361,20 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# After Effects Plugin build outputs
+*.aex
+*.plugin
+
+# Generated resource files (PiPL)
+*.rc
+*.rr
+*.rrc
+
+# Mac-specific build artifacts
+*.rsrc
+*.dSYM/
+DerivedData/
+
+# Project filters (optional - user preference)
+*.vcxproj.filters
