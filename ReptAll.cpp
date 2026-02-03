@@ -47,6 +47,15 @@
 // Suppress C4244: conversion from PF_FpLong (double) to PF_FpShort (float)
 // This is safe for floating-point color channel assignments
 #pragma warning(disable : 4244)
+#elif defined(__clang__)
+// Suppress Clang warnings (used by Mac/Linux builds)
+#pragma clang diagnostic push
+// Suppress -Wc++17-extensions: 'if constexpr' is a C++17 language extension
+#pragma clang diagnostic ignored "-Wc++17-extensions"
+// Suppress -Wfloat-conversion: conversion from double to float in color assignments
+#pragma clang diagnostic ignored "-Wfloat-conversion"
+// Suppress -Wunused-variable: template parameters may not be used in all instantiations
+#pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 
 #ifndef M_PI
@@ -1071,3 +1080,7 @@ EffectMain(
 
 	return err;
 }
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
