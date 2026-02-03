@@ -530,6 +530,8 @@ jobs:
             REZ_SEARCH_PATHS="$SDK_ROOT/Headers $SDK_ROOT/Headers/SP $SDK_ROOT/Resources" \
             GCC_SYMBOLS_PRIVATE_EXTERN=NO \
             EXPORTED_SYMBOLS_FILE="$(pwd)/ReptAll.exp" \
+            CLANG_CXX_LANGUAGE_STANDARD="c++17" \
+            OTHER_CPLUSPLUSFLAGS="-std=c++17" \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
