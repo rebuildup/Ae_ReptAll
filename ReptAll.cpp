@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <vector>
 #include <cfloat>
+#include "AE_EffectPixelFormat.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -59,7 +60,8 @@ struct TransformParams {
 };
 
 // Template for bilinear sampling - eliminates code duplication
-template<typename PixelType, PF_FpLong MaxChannel>
+// Use integer template parameter to avoid C++20 requirement
+template<typename PixelType, int MaxChannelInt>
 static PixelType
 SampleBilinearTmpl(
 	PF_EffectWorld *srcP,
@@ -106,7 +108,8 @@ SampleBilinearTmpl(
 	PF_FpLong w11 = fx * fy;
 
 	// Apply interpolation
-	if constexpr (MaxChannel == 1.0) {
+	// MaxChannelInt == 1 indicates float (1.0), other values indicate integer
+	if constexpr (MaxChannelInt == 1) {
 		// Float: no rounding, no clamping needed
 		result.alpha = p00.alpha * w00 + p10.alpha * w10 + p01.alpha * w01 + p11.alpha * w11;
 		result.red   = p00.red * w00 + p10.red * w10 + p01.red * w01 + p11.red * w11;
@@ -311,12 +314,12 @@ ApplyTransform2DOptimized(
 // Wrapper functions for template-based bilinear sampling
 static PF_Pixel
 SampleBilinear8(PF_EffectWorld *srcP, PF_FpLong x, PF_FpLong y) {
-	return SampleBilinearTmpl<PF_Pixel, (PF_FpLong)PF_MAX_CHAN8>(srcP, x, y);
+	return SampleBilinearTmpl<PF_Pixel, PF_MAX_CHAN8>(srcP, x, y);
 }
 
 static PF_Pixel16
 SampleBilinear16(PF_EffectWorld *srcP, PF_FpLong x, PF_FpLong y) {
-	return SampleBilinearTmpl<PF_Pixel16, (PF_FpLong)PF_MAX_CHAN16>(srcP, x, y);
+	return SampleBilinearTmpl<PF_Pixel16, PF_MAX_CHAN16>(srcP, x, y);
 }
 
 // Alpha-over compositing for 8-bit (premultiplied alpha)
@@ -579,7 +582,7 @@ ComputeCopyTransforms(
 
 				if (!err) {
 					focal_length = stream_val.one_d;
-					suites.StreamSuite2()->AEGP_DisposeStreamValue(in_data->effect_ref, &stream_val);
+					suites.StreamSuite2()->AEGP_DisposeStreamValue(&stream_val);
 				}
 
 				// Extract camera position and direction
@@ -761,9 +764,26 @@ RenderCopies(
 		return PF_Err_BAD_CALLBACK_PARAM;
 	}
 
-	// Check bit depth
+	// Check bit depth using pixel format
+	// PF_WORLD_IS_DEEP checks for 16-bit (ARGB64)
+	// For 32-bit float (ARGB128), we need to use PF_WorldSuite2->PF_GetPixelFormat()
 	PF_Boolean deepB = PF_WORLD_IS_DEEP(output);
-	PF_Boolean floatB = PF_WORLD_IS_FLOAT(output);
+	PF_Boolean floatB = FALSE;
+
+	// Detect 32-bit float format using PF_WorldSuite2
+	PF_PixelFormat pixfmt = PF_PixelFormat_INVALID;
+	PF_WorldSuite2 *world_suiteP = NULL;
+	A_ErrSuiteErr suite_err = in_data->pica_basicP->AcquireSuite(
+		kPFWorldSuite,
+		kPFWorldSuiteVersion2,
+		(const void**)&world_suiteP);
+
+	if (suite_err == A_Err_NONE && world_suiteP) {
+		PF_Err fmt_err = world_suiteP->PF_GetPixelFormat(output, &pixfmt);
+		if (fmt_err == PF_Err_NONE && pixfmt == PF_PixelFormat_ARGB128) {
+			floatB = TRUE;
+		}
+	}
 
 	// Calculate center point
 	PF_FpLong centerX = srcP->width / 2.0;
