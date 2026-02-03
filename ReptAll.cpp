@@ -44,6 +44,9 @@
 #ifdef _MSC_VER
 // Suppress C4984: 'if constexpr' is a C++17 language extension
 #pragma warning(disable : 4984)
+// Suppress C4244: conversion from PF_FpLong (double) to PF_FpShort (float)
+// This is safe for floating-point color channel assignments
+#pragma warning(disable : 4244)
 #endif
 
 #ifndef M_PI
