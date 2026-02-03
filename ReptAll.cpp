@@ -41,6 +41,11 @@
 #include <cfloat>
 #include "AE_EffectPixelFormat.h"
 
+#ifdef _MSC_VER
+// Suppress C4984: 'if constexpr' is a C++17 language extension
+#pragma warning(disable : 4984)
+#endif
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -392,7 +397,7 @@ CompositePremult16(
 // Wrapper for 32-bit Float
 static PF_PixelFloat
 SampleBilinearFloat(PF_EffectWorld *srcP, PF_FpLong x, PF_FpLong y) {
-	return SampleBilinearTmpl<PF_PixelFloat, 1.0>(srcP, x, y);
+	return SampleBilinearTmpl<PF_PixelFloat, 1>(srcP, x, y);
 }
 
 // Alpha-over compositing for 32-bit Float (premultiplied alpha)
@@ -582,7 +587,8 @@ ComputeCopyTransforms(
 
 				if (!err) {
 					focal_length = stream_val.one_d;
-					suites.StreamSuite2()->AEGP_DisposeStreamValue(&stream_val);
+					// AEGP_StreamVal is a union, not a pointer-allocated struct
+					// No disposal needed for values returned by AEGP_GetLayerStreamValue
 				}
 
 				// Extract camera position and direction
@@ -773,7 +779,7 @@ RenderCopies(
 	// Detect 32-bit float format using PF_WorldSuite2
 	PF_PixelFormat pixfmt = PF_PixelFormat_INVALID;
 	PF_WorldSuite2 *world_suiteP = NULL;
-	A_ErrSuiteErr suite_err = in_data->pica_basicP->AcquireSuite(
+	A_Err suite_err = in_data->pica_basicP->AcquireSuite(
 		kPFWorldSuite,
 		kPFWorldSuiteVersion2,
 		(const void**)&world_suiteP);
