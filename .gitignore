@@ -378,3 +378,7 @@ DerivedData/
 
 # Project filters (optional - user preference)
 *.vcxproj.filters
+# XcodeGen generated files and local SDK path
+/ReptAll.xcodeproj/
+/build/
+/.env.local
