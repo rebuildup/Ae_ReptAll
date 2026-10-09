@@ -49,7 +49,13 @@ resource 'PiPL' (16000) {
 		},
 		/* [10] */
 		AE_Effect_Global_OutFlags {
-		0x06000000	/* PF_OutFlag_DEEP_COLOR_AWARE (0x02000000) | PF_OutFlag_FLOAT_COLOR_AWARE (0x04000000) */
+		/* PF_OutFlag_DEEP_COLOR_AWARE, which is what PF_Cmd_GLOBAL_SETUP
+		   actually sets. The previous literal 0x06000000 also claimed
+		   bit 0x04000000, which AE_Effect.h does not define, and After
+		   Effects reported a global outflags mismatch (code 0x02000000 vs
+		   PiPL 0x06000000). 32-bit float is an out_flags2 flag in this SDK,
+		   so it does not belong here. */
+		0x02000000
 		},
 		AE_Effect_Global_OutFlags_2 {
 		6  /* PF_OutFlag2_I_USE_3D_CAMERA (0x2) | PF_OutFlag2_I_USE_3D_LIGHTS (0x4) */
